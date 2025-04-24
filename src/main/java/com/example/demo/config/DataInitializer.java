@@ -6,44 +6,44 @@ import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
 
 @Component
 public class DataInitializer {
 
-    private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final UserRepository userRepository;
 
-    public DataInitializer(UserRepository userRepository, RoleRepository roleRepository) {
-        this.userRepository = userRepository;
+    public DataInitializer(RoleRepository roleRepository, UserRepository userRepository) {
         this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
     }
 
     @PostConstruct
-    public void init() {
+    @Transactional
+    public void initData() {
         // Create roles
-        Role adminRole = Role.builder().name("ROLE_ADMIN").build();
-        Role userRole = Role.builder().name("ROLE_USER").build();
-
-        roleRepository.saveAll(List.of(adminRole, userRole));
+        Role adminRole = roleRepository.save(Role.builder().name("ADMIN").build());
+        Role userRole = roleRepository.save(Role.builder().name("USER").build());
 
         // Create users
         User admin = User.builder()
                 .username("admin")
-                .password("admin") // In production, encode this!
+                .password("admin") // In production, use encoded password
                 .roles(Set.of(adminRole, userRole))
                 .build();
 
-        User normalUser = User.builder()
+        User user = User.builder()
                 .username("user")
                 .password("user")
                 .roles(Set.of(userRole))
                 .build();
 
-        userRepository.saveAll(List.of(admin, normalUser));
+        userRepository.save(admin);
+        userRepository.save(user);
 
-        System.out.println("✅ Sample roles and users initialized.");
+        System.out.println("✅ Sample data initialized.");
     }
 }

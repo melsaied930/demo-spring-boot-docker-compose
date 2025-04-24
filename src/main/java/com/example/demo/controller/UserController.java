@@ -5,7 +5,6 @@ import com.example.demo.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -22,7 +21,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User get(@PathVariable UUID id) {
+    public User get(@PathVariable Long id) {
         return service.findById(id).orElseThrow();
     }
 
@@ -32,13 +31,13 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public User update(@PathVariable UUID id, @RequestBody User user) {
+    public User update(@PathVariable Long id, @RequestBody User user) {
         user.setId(id);
         return service.save(user);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) {
+    public void delete(@PathVariable Long id) {
         service.delete(id);
     }
 }

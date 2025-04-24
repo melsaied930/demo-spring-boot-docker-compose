@@ -1,81 +1,71 @@
-Here are full `curl` test commands for your REST endpoints, assuming the Spring Boot app is running locally at `http://localhost:8080` and the API accepts and returns JSON.
+Here are the full `curl` test commands for all the endpoints defined in your `RoleController` and `UserController`. These are meant to be run against your local Spring Boot backend at `http://localhost:8080`.
 
 ---
 
-## ✅ `RoleController` — `/roles`
+### 🟦 **RoleController `/roles`**
 
-### 🔍 Get all roles
+#### 🔹 Get All Roles
 ```bash
 curl -X GET http://localhost:8080/roles
 ```
 
-### 🔍 Get a role by ID
+#### 🔹 Get Role by ID
 ```bash
-curl -X GET http://localhost:8080/roles/<ROLE_UUID>
+curl -X GET http://localhost:8080/roles/1
 ```
 
-### 🆕 Create a new role
+#### 🔹 Create Role
 ```bash
 curl -X POST http://localhost:8080/roles \
   -H "Content-Type: application/json" \
   -d '{"name": "ADMIN"}'
 ```
 
-### ✏️ Update an existing role
+#### 🔹 Update Role
 ```bash
-curl -X PUT http://localhost:8080/roles/<ROLE_UUID> \
+curl -X PUT http://localhost:8080/roles/1 \
   -H "Content-Type: application/json" \
-  -d '{"name": "MODERATOR"}'
+  -d '{"id": 1, "name": "SUPER_ADMIN"}'
 ```
 
-### ❌ Delete a role
+#### 🔹 Delete Role
 ```bash
-curl -X DELETE http://localhost:8080/roles/<ROLE_UUID>
+curl -X DELETE http://localhost:8080/roles/1
 ```
 
 ---
 
-## ✅ `UserController` — `/users`
+### 🟩 **UserController `/users`**
 
-### 🔍 Get all users
+#### 🔹 Get All Users
 ```bash
 curl -X GET http://localhost:8080/users
 ```
 
-### 🔍 Get a user by ID
+#### 🔹 Get User by ID
 ```bash
-curl -X GET http://localhost:8080/users/<USER_UUID>
+curl -X GET http://localhost:8080/users/1
 ```
 
-### 🆕 Create a new user
+#### 🔹 Create User
 ```bash
 curl -X POST http://localhost:8080/users \
   -H "Content-Type: application/json" \
-  -d '{
-    "username": "johndoe",
-    "password": "secret",
-    "roles": []
-}'
+  -d '{"username": "john_doe", "password": "secure123"}'
 ```
 
-
-
-### ✏️ Update an existing user
+#### 🔹 Update User
 ```bash
-curl -X PUT http://localhost:8080/users/<USER_UUID> \
+curl -X PUT http://localhost:8080/users/1 \
   -H "Content-Type: application/json" \
-  -d '{
-    "username": "johnsmith",
-    "password": "newpassword",
-    "roles": []
-}'
+  -d '{"id": 1, "username": "john_updated", "password": "newpassword"}'
 ```
 
-### ❌ Delete a user
+#### 🔹 Delete User
 ```bash
-curl -X DELETE http://localhost:8080/users/<USER_UUID>
+curl -X DELETE http://localhost:8080/users/1
 ```
 
 ---
 
-Let me know if you want to auto-generate UUIDs for test data or run everything in a script 🚀
+Let me know if you want to include the many-to-many relation (e.g., assigning roles to users), or run these from a script, or add UUID support instead of `Long`.

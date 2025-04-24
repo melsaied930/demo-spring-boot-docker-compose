@@ -18,7 +18,7 @@ public class RoleService {
         return repository.findAll();
     }
 
-    public Optional<Role> findById(UUID id) {
+    public Optional<Role> findById(Long id) {
         return repository.findById(id);
     }
 
@@ -26,7 +26,7 @@ public class RoleService {
         return repository.save(role);
     }
 
-    public void delete(UUID id) {
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 }

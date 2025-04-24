@@ -5,7 +5,6 @@ import com.example.demo.service.RoleService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/roles")
@@ -22,7 +21,7 @@ public class RoleController {
     }
 
     @GetMapping("/{id}")
-    public Role get(@PathVariable UUID id) {
+    public Role get(@PathVariable Long id) {
         return service.findById(id).orElseThrow();
     }
 
@@ -32,13 +31,13 @@ public class RoleController {
     }
 
     @PutMapping("/{id}")
-    public Role update(@PathVariable UUID id, @RequestBody Role role) {
+    public Role update(@PathVariable Long id, @RequestBody Role role) {
         role.setId(id);
         return service.save(role);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) {
+    public void delete(@PathVariable Long id) {
         service.delete(id);
     }
 }

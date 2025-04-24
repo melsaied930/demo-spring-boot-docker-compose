@@ -18,7 +18,7 @@ public class UserService {
         return repository.findAll();
     }
 
-    public Optional<User> findById(UUID id) {
+    public Optional<User> findById(Long id) {
         return repository.findById(id);
     }
 
@@ -26,7 +26,7 @@ public class UserService {
         return repository.save(user);
     }
 
-    public void delete(UUID id) {
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 }

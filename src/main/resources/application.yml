@@ -1,15 +1,26 @@
 # application.yml
+
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/mydb
-    username: myuser
-    password: mypass
+    url: jdbc:postgresql://postgres:5432/demo-db
+    username: postgres
+    password: postgres
 
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-    open-in-view: false
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        format_sql: true
+#    open-in-view: false
+
+#  docker:
+#    compose:
+#      skip:
+#        in-service:
+#          pgadmin_container: true
+#      readiness:
+#        wait:
+#          timeout: 2m
+#      lifecycle-management: start_and_stop

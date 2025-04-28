@@ -1,4 +1,6 @@
-#version: "3.8"
+#  docker-compose.yml
+
+version: "3.8"
 
 services:
   postgres:
@@ -7,26 +9,30 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: mydb
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypass
+      - POSTGRES_DB=demo-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U myuser"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
+
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin_container
     ports:
       - "5050:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@demo.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      - PGADMIN_DEFAULT_EMAIL=admin@demo.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    volumes:
+      - ./servers.json:/pgadmin4/servers.json
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+
 volumes:
-  pgdata:
-#---------------------------------------------
+  postgres_data:

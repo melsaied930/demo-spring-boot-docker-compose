@@ -2,7 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Role;
 import com.example.demo.service.RoleService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -22,7 +24,8 @@ public class RoleController {
 
     @GetMapping("/{id}")
     public Role get(@PathVariable Long id) {
-        return service.findById(id).orElseThrow();
+        return service.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role not found"));
     }
 
     @PostMapping
@@ -32,12 +35,18 @@ public class RoleController {
 
     @PutMapping("/{id}")
     public Role update(@PathVariable Long id, @RequestBody Role role) {
+        if (!service.findById(id).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Role not found");
+        }
         role.setId(id);
         return service.save(role);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
+        if (!service.findById(id).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Role not found");
+        }
         service.delete(id);
     }
 }

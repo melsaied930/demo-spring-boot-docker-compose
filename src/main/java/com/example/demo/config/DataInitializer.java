@@ -5,45 +5,48 @@ import com.example.demo.model.User;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
 @Component
+@RequiredArgsConstructor
 public class DataInitializer {
 
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
 
-    public DataInitializer(RoleRepository roleRepository, UserRepository userRepository) {
-        this.roleRepository = roleRepository;
-        this.userRepository = userRepository;
-    }
-
     @PostConstruct
-    @Transactional
     public void initData() {
-        // Create roles
-        Role adminRole = roleRepository.save(Role.builder().name("ADMIN").build());
-        Role userRole = roleRepository.save(Role.builder().name("USER").build());
+        Role adminRole = roleRepository.findByName("ADMIN")
+                .orElseGet(() -> roleRepository.save(Role.builder().name("ADMIN").build()));
 
-        // Create users
-        User admin = User.builder()
-                .username("admin")
-                .password("admin") // In production, use encoded password
-                .roles(Set.of(adminRole, userRole))
-                .build();
+        Role userRole = roleRepository.findByName("USER")
+                .orElseGet(() -> roleRepository.save(Role.builder().name("USER").build()));
 
-        User user = User.builder()
-                .username("user")
-                .password("user")
-                .roles(Set.of(userRole))
-                .build();
+        System.out.println("✅ Roles initialized.");
 
-        userRepository.save(admin);
-        userRepository.save(user);
+        userRepository.findByUsername("admin").orElseGet(() -> {
+            User admin = User.builder()
+                    .username("admin")
+                    .password("admin")
+                    .roles(Set.of(adminRole, userRole))
+                    .build();
+            return userRepository.save(admin);
+        });
 
-        System.out.println("✅ Sample data initialized.");
+        System.out.println("✅ Admin user initialized.");
+
+        userRepository.findByUsername("user").orElseGet(() -> {
+            User user = User.builder()
+                    .username("user")
+                    .password("user")
+                    .roles(Set.of(userRole))
+                    .build();
+            return userRepository.save(user);
+        });
+
+        System.out.println("✅ Normal user initialized.");
     }
 }

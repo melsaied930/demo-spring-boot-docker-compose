@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class DemoSpringBootDockerComposeApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DemoSpringBootDockerComposeApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DemoSpringBootDockerComposeApplication.class, args);
+    }
 
 }

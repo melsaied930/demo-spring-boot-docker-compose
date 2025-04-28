@@ -1,11 +1,12 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.*;
+
+import java.util.Set;
 
 @Entity
-@Table(name = "roles")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,5 +22,6 @@ public class Role {
     private String name;
 
     @ManyToMany(mappedBy = "roles")
-    private Set<User> users = new HashSet<>();
+    @JsonIgnore
+    private Set<User> users;
 }

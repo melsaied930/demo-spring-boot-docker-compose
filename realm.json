@@ -1,0 +1,142 @@
+[
+  {
+    "realm": "tenant-1",
+    "enabled": true,
+    "requiredActions": [
+      {
+        "alias": "VERIFY_PROFILE",
+        "enabled": false
+      }
+    ],
+    "roles": {
+      "realm": [
+        {
+          "name": "tenant-1-role-admin"
+        },
+        {
+          "name": "tenant-1-role-user"
+        }
+      ]
+    },
+    "clients": [
+      {
+        "clientId": "tenant-1-client-app-1",
+        "secret": "shared-secret",
+        "protocol": "openid-connect",
+        "publicClient": true,
+        "rootUrl": "http://localhost:9091",
+        "standardFlowEnabled": true,
+        "directAccessGrantsEnabled": true
+      },
+      {
+        "clientId": "tenant-1-client-app-2",
+        "secret": "shared-secret",
+        "protocol": "openid-connect",
+        "publicClient": true,
+        "rootUrl": "http://localhost:9092",
+        "standardFlowEnabled": true,
+        "directAccessGrantsEnabled": true
+      }
+    ],
+    "users": [
+      {
+        "username": "tenant-1-user-admin",
+        "enabled": true,
+        "credentials": [
+          {
+            "type": "password",
+            "value": "admin",
+            "temporary": false
+          }
+        ],
+        "realmRoles": [
+          "tenant-1-role-admin"
+        ]
+      },
+      {
+        "username": "tenant-1-user-user",
+        "enabled": true,
+        "credentials": [
+          {
+            "type": "password",
+            "value": "user",
+            "temporary": false
+          }
+        ],
+        "realmRoles": [
+          "tenant-1-role-user"
+        ]
+      }
+    ]
+  },
+  {
+    "realm": "tenant-2",
+    "enabled": true,
+    "requiredActions": [
+      {
+        "alias": "VERIFY_PROFILE",
+        "enabled": false
+      }
+    ],
+    "roles": {
+      "realm": [
+        {
+          "name": "tenant-2-role-admin"
+        },
+        {
+          "name": "tenant-2-role-user"
+        }
+      ]
+    },
+    "clients": [
+      {
+        "clientId": "tenant-2-client-app-1",
+        "secret": "shared-secret",
+        "protocol": "openid-connect",
+        "publicClient": true,
+        "rootUrl": "http://localhost:9091",
+        "standardFlowEnabled": true,
+        "directAccessGrantsEnabled": true
+      },
+      {
+        "clientId": "tenant-2-client-app-2",
+        "secret": "shared-secret",
+        "protocol": "openid-connect",
+        "publicClient": true,
+        "rootUrl": "http://localhost:9092",
+        "standardFlowEnabled": true,
+        "directAccessGrantsEnabled": true
+      }
+    ],
+    "users": [
+      {
+        "username": "tenant-2-user-admin",
+        "enabled": true,
+        "credentials": [
+          {
+            "type": "password",
+            "value": "admin",
+            "temporary": false
+          }
+        ],
+        "realmRoles": [
+          "tenant-2-role-admin"
+        ]
+      },
+      {
+        "username": "tenant-2-user-user",
+        "enabled": true,
+        "credentials": [
+          {
+            "type": "password",
+            "value": "user",
+            "temporary": false
+          }
+        ],
+        "realmRoles": [
+          "tenant-2-role-user"
+        ]
+      }
+    ]
+  }
+]

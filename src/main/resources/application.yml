@@ -1,14 +1,41 @@
 # application.yml
 
 spring:
+  thymeleaf:
+    cache: false
+
   datasource:
     url: jdbc:postgresql://postgres:5432/demo-db
     username: postgres
     password: postgres
+  #    hikari:
+  #      maximum-pool-size: 10
+  #      minimum-idle: 5
+  #      idle-timeout: 600000
+  #      connection-timeout: 30000
 
   jpa:
     hibernate:
       ddl-auto: update
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
+#        format_sql: true
+#    show-sql: false
+
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: http://keycloak:8080/realms/tenant-1
 
 server:
   port: 9090
+#  servlet:
+#    context-path: /api
+
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: health,info,metrics

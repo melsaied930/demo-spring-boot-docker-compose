@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Area</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Admin Area</h1>
+    <p>Welcome <span th:text="${username}"></span> to the Admin Area!</p>
+    <p>This page is accessible only to users with the ADMIN role.</p>
+
+    <h2>Administrative Functions</h2>
+    <p>Here you would typically have admin-specific functionality.</p>
+
+    <p><a th:href="@{/}">Back to Home</a></p>
+    <form method="post" th:action="@{/logout}">
+        <button class="btn btn-danger" type="submit">Logout</button>
+    </form>
+</div>
+</body>
+</html>

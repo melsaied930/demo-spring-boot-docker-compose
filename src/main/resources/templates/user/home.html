@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Area</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div class="container">
+    <h1>User Area</h1>
+    <p>Welcome <span th:text="${username}"></span> to the User Area!</p>
+    <p>This page is accessible to users with the USER role.</p>
+
+    <p><a th:href="@{/}">Back to Home</a></p>
+    <form method="post" th:action="@{/logout}">
+        <button class="btn btn-danger" type="submit">Logout</button>
+    </form>
+</div>
+</body>
+</html>

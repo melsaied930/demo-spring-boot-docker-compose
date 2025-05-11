@@ -46,4 +46,8 @@ public class RoleService {
 
         repository.deleteById(id);
     }
+
+    public List<Role> findAllById(List<Long> roleIds) {
+        return repository.findAllById(roleIds);
+    }
 }

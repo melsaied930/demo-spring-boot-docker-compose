@@ -6,28 +6,31 @@ spring:
 
   datasource:
     url: jdbc:postgresql://postgres:5432/demo-db
+    driver-class-name: org.postgresql.Driver
     username: postgres
     password: postgres
-  #    hikari:
-  #      maximum-pool-size: 10
-  #      minimum-idle: 5
-  #      idle-timeout: 600000
-  #      connection-timeout: 30000
+#    hikari:
+#      maximum-pool-size: 10
+#      minimum-idle: 5
+#      idle-timeout: 600000
+#      connection-timeout: 30000
+#      pool-name: HikariPool
 
   jpa:
     hibernate:
       ddl-auto: update
-#    properties:
-#      hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQLDialect
-#        format_sql: true
-#    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        globally_quoted_identifiers: true
+    show-sql: true
+    open-in-view: false
 
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-#          issuer-uri: http://keycloak:8080/realms/tenant-1
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
 
 server:
   port: 9090
@@ -39,3 +42,10 @@ server:
 #    web:
 #      exposure:
 #        include: health,info,metrics
+
+#spring:
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: http://keycloak:8080/realms/tenant-1

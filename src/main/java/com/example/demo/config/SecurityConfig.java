@@ -32,14 +32,20 @@ public class SecurityConfig {
         http
                 .userDetailsService(userDetailsService)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/css/**", "/js/**", "/images/**", "/error/**").permitAll()
-                        .requestMatchers("/user/**", "/user").hasAnyRole("USER")
-                        .requestMatchers("/admin/**", "/admin").hasRole("ADMIN")
+                        .requestMatchers("/", "/login", "/error/**", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/user", "/user/**").hasRole("USER")
+                        .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults())
                 .formLogin(form -> form
                         .loginPage("/login")
+                        .defaultSuccessUrl("/", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 )
                 .exceptionHandling(exception -> exception

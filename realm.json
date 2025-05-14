@@ -50,7 +50,8 @@
           }
         ],
         "realmRoles": [
-          "tenant-1-role-admin"
+          "tenant-1-role-admin",
+          "tenant-1-role-user"
         ]
       },
       {

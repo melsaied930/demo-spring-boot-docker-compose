@@ -1,66 +1,76 @@
 package com.example.demo.config;
 
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtDecoders;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.security.config.Customizer.withDefaults;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-@Slf4j
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-    private final UserDetailsService userDetailsService;
-
-    public SecurityConfig(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-        log.info("SecurityConfig initialized with UserDetailsService: {}", userDetailsService.getClass().getName());
-    }
+    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
+    private String issuerUri;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        log.info("Configuring SecurityFilterChain");
-
         http
-                .userDetailsService(userDetailsService)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/error/**", "/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/user", "/user/**").hasRole("USER")
-                        .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
-                )
-                .httpBasic(withDefaults())
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/", true)
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
-                        .permitAll()
-                )
-                .exceptionHandling(exception -> exception
-                        .accessDeniedPage("/error/403")
-                )
-                .csrf(AbstractHttpConfigurer::disable);
-
-        log.info("SecurityFilterChain configuration complete");
-
+                .authorizeHttpRequests(auth -> {
+                    auth
+                            .requestMatchers("/").permitAll()
+                            .requestMatchers("/user", "/user/**").hasRole("tenant-1-role-user")
+                            .requestMatchers("/admin", "/admin/**").hasRole("tenant-1-role-admin")
+                            .anyRequest().authenticated();
+                })
+                .oauth2ResourceServer(resource -> {
+                    resource
+                            .jwt(jwt -> jwt
+                                    .jwtAuthenticationConverter(jwtAuthenticationConverter()));
+                })
+                .exceptionHandling(exceptionHandling -> {
+                    exceptionHandling
+                            .authenticationEntryPoint((request, response, authException) -> {
+                                response.setStatus(401);
+                                response.setContentType("application/json");
+                                response.getWriter().write("{\"error\":\"Unauthorized\",\"message\":\"" +
+                                        authException.getMessage() + "\"}");
+                            })
+                            .accessDeniedHandler((request, response, accessDeniedException) -> {
+                                response.setStatus(403);
+                                response.setContentType("application/json");
+                                response.getWriter().write("{\"error\":\"Forbidden\",\"message\":\"" +
+                                        accessDeniedException.getMessage() + "\"}");
+                            });
+                });
         return http.build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        log.info("Creating BCryptPasswordEncoder bean");
-        return new BCryptPasswordEncoder();
+    public JwtDecoder jwtDecoder() {
+        return JwtDecoders.fromIssuerLocation(issuerUri);
+    }
+
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtAuthenticationConverter jwtConverter = new JwtAuthenticationConverter();
+        jwtConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            Map<String, Object> access = jwt.getClaim("realm_access");
+            @SuppressWarnings("unchecked")
+            List<String> roles = (List<String>) access.get("roles");
+            return roles.stream().map(role -> {
+                String authority = "ROLE_" + role;
+                return new SimpleGrantedAuthority(authority);
+            }).collect(Collectors.toList());
+        });
+        return jwtConverter;
     }
 }

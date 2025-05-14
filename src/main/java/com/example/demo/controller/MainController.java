@@ -1,41 +1,37 @@
 package com.example.demo.controller;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.security.Principal;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class MainController {
 
     @GetMapping("/")
-    public String home(Principal principal, Model model) {
-        if (principal != null) {
-            model.addAttribute("username", principal.getName());
-        }
-        return "home";
-    }
-
-    @GetMapping("/login")
-    public String login() {
-        return "login";
+    @ResponseBody
+    public String home() {
+        return "Welcome to the home page! This is accessible to everyone.";
     }
 
     @GetMapping("/user")
-    public String userHome(Principal principal, Model model) {
-        model.addAttribute("username", principal.getName());
-        return "user/home";
+    @ResponseBody
+    public String userHome(@AuthenticationPrincipal Jwt jwt) {
+        String username = jwt.getClaimAsString("preferred_username");
+        jwt.getClaims().forEach((key, value) -> {
+        });
+        return "Hello, User " + username + "! You've accessed a protected endpoint for users with role 'USER'.\n" +
+                "Your JWT subject: " + jwt.getSubject();
     }
 
     @GetMapping("/admin")
-    public String adminHome(Principal principal, Model model) {
-        model.addAttribute("username", principal.getName());
-        return "admin/home";
-    }
-
-    @GetMapping("/error/403")
-    public String error403() {
-        return "error/403";
+    @ResponseBody
+    public String adminHome(@AuthenticationPrincipal Jwt jwt) {
+        String username = jwt.getClaimAsString("preferred_username");
+        jwt.getClaims().forEach((key, value) -> {
+        });
+        return "Hello, Admin " + username + "! You've accessed a protected endpoint for users with role 'ADMIN'.\n" +
+                "Your JWT subject: " + jwt.getSubject();
     }
 }

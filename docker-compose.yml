@@ -3,7 +3,7 @@
 services:
 
   postgres:
-    image: postgres:16
+    image: postgres:latest
     container_name: postgres_container
     environment:
       POSTGRES_DB: demo-db
@@ -20,7 +20,7 @@ services:
       retries: 5
 
   pgadmin:
-    image: dpage/pgadmin4
+    image: dpage/pgadmin4:latest
     container_name: pgadmin_container
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@demo.com
@@ -34,14 +34,14 @@ services:
       - ./servers.json:/pgadmin4/servers.json
       - pgadmin_data:/var/lib/pgadmin
     healthcheck:
-      test: ["CMD", "wget", "-O", "-", "http://localhost:80/misc/ping"]
+      test: [ "CMD", "wget", "-O", "-", "http://localhost:80/misc/ping" ]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
 
   keycloak:
-    image: quay.io/keycloak/keycloak:24.0.2
+    image: quay.io/keycloak/keycloak:latest
     container_name: keycloak_container
     command:
       - start-dev
@@ -65,7 +65,7 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ready"]
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health/ready" ]
       interval: 30s
       timeout: 15s
       retries: 5
